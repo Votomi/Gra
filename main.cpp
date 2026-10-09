@@ -5,6 +5,7 @@ int main()
 {
     int playerx = 100;
     int playery = 100;
+    int playersize = 50;
     Display* display = XOpenDisplay(nullptr);
 
     if (display == nullptr)
@@ -13,6 +14,7 @@ int main()
     int screen = DefaultScreen(display);
 
     Window window = XCreateSimpleWindow(
+
         display,
         RootWindow(display, screen),
         100, 100,
@@ -21,6 +23,7 @@ int main()
         BlackPixel(display, screen),
         WhitePixel(display, screen)
     );
+    XStoreName(display, window, "Moja gra");
 
     XMapWindow(display, window);
     
@@ -33,7 +36,6 @@ int main()
     XSetWMProtocols(display, window, &wmDelete, 1);
     
     GC gc = XCreateGC(display, window, 0, nullptr);
-
     while (true){
 
     XNextEvent(display, &event);
@@ -44,7 +46,7 @@ XFillRectangle(
     window,
     gc,
     playerx, playery,
-    50, 50
+    playersize, playersize
 );
 
 XFlush(display);
@@ -62,6 +64,14 @@ XFlush(display);
         }else if(key == 'a'){
             playerx -=5;
             
+        }else if (key =='r'){
+            if(playersize > 0){
+                playersize -= 5;
+            }
+        }else if(key == 'f'){
+            if(playersize <= 250){
+                playersize += 5;
+            }
         }
         
     }
