@@ -1,11 +1,16 @@
 #include <X11/Xlib.h>
 #include <iostream>
+#include "Enemy.h"
+#include "info.h"
 
 int main()
 {
+    Info info;
+    Enemy enemy;
     int playerx = 100;
     int playery = 100;
     int playersize = 50;
+    
     Display* display = XOpenDisplay(nullptr);
 
     if (display == nullptr)
@@ -40,13 +45,31 @@ int main()
 
     XNextEvent(display, &event);
     XClearWindow(display, window);
-
+//ty
 XFillRectangle(
     display,
     window,
     gc,
     playerx, playery,
     playersize, playersize
+);
+//przeciwnik
+XFillRectangle(
+    display,
+    window,
+    gc,
+    enemy.x, enemy.y,
+    enemy.size, enemy.size
+);
+//kolor czerowny
+XSetForeground(display, gc, 0xFF0000);
+//ramka info
+XFillRectangle(
+    display,
+    window,
+    gc,
+    info.x, info.y,
+    info.width, info.height
 );
 
 XFlush(display);
