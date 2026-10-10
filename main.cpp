@@ -1,15 +1,11 @@
 #include <X11/Xlib.h>
 #include <iostream>
-#include "Enemy.h"
-#include "info.h"
+#include <cstring>
+#include "menu/Menu.h"
 
 int main()
 {
-    Info info;
-    Enemy enemy;
-    int playerx = 100;
-    int playery = 100;
-    int playersize = 50;
+    Menu menu;
     
     Display* display = XOpenDisplay(nullptr);
 
@@ -23,7 +19,7 @@ int main()
         display,
         RootWindow(display, screen),
         100, 100,
-        1280, 720,
+        1920, 1080,
         1,
         BlackPixel(display, screen),
         WhitePixel(display, screen)
@@ -32,7 +28,7 @@ int main()
 
     XMapWindow(display, window);
     
-    XSelectInput(display, window, KeyPressMask | ExposureMask);
+    XSelectInput(display, window, KeyPressMask | ExposureMask | ButtonPressMask);
     XFlush(display);
 
     XEvent event;
@@ -41,63 +37,35 @@ int main()
     XSetWMProtocols(display, window, &wmDelete, 1);
     
     GC gc = XCreateGC(display, window, 0, nullptr);
+    XSetWindowBackground(display,window,0x301050); //kolor tła
+
+
     while (true){
 
     XNextEvent(display, &event);
     XClearWindow(display, window);
-//ty
-XFillRectangle(
-    display,
-    window,
-    gc,
-    playerx, playery,
-    playersize, playersize
-);
-//przeciwnik
-XFillRectangle(
-    display,
-    window,
-    gc,
-    enemy.x, enemy.y,
-    enemy.size, enemy.size
-);
-//kolor czerowny
-XSetForeground(display, gc, 0xFF0000);
-//ramka info
-XFillRectangle(
-    display,
-    window,
-    gc,
-    info.x, info.y,
-    info.width, info.height
-);
 
-XFlush(display);
-    //klaiwatura
-    if (event.type == KeyPress){
-    //Symbol klawisza
-    char key = XLookupKeysym(&event.xkey, 0);
-    //Sterowanie oknem
-        if (key == 'd'){
-            playerx += 5;
-        }else if (key == 'w'){
-            playery -= 5;
-        } else if(key =='s'){
-            playery +=5;
-        }else if(key == 'a'){
-            playerx -=5;
-            
-        }else if (key =='r'){
-            if(playersize > 0){
-                playersize -= 5;
-            }
-        }else if(key == 'f'){
-            if(playersize <= 250){
-                playersize += 5;
-            }
-        }
-        
+    rysujTlo(display, window);
+    rysujMenu(display, window, gc, menu);
+    XFlush(display);
+
+
+
+    
+    //działanie przycisku
+if (event.type == ButtonPress) {
+    int mouseX = event.xbutton.x;
+    int mouseY = event.xbutton.y;
+
+    //Leave
+    if (mouseX >= 100 &&
+        mouseX <= 100 + menu.width &&
+        mouseY >= 100 + menu.odstep &&
+        mouseY <= 100 + menu.odstep + menu.height) {
+
+        break;
     }
+}
 
     //Zatrzymanie
     if (event.type == ClientMessage){
