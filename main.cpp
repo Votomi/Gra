@@ -2,11 +2,12 @@
 #include <iostream>
 #include <cstring>
 #include "menu/Menu.h"
+#include "gra/gra.h"
 
 int main()
 {
     Menu menu;
-    
+    bool czyGra = false;
     Display* display = XOpenDisplay(nullptr);
 
     if (display == nullptr)
@@ -64,10 +65,31 @@ if (event.type == ButtonPress) {
         mouseY <= 100 + menu.odstep + menu.height) {
 
         break;
-    }
-}
+    }else if (mouseX >= 100 &&
+         mouseX <= 100 + menu.width &&
+         mouseY >= 100 &&
+         mouseY <= 100 + menu.height) {
+        czyGra = true;
 
-    //Zatrzymanie
+        XClearWindow(display, window);
+
+        XSetForeground(display, gc, 0xFFFFFF);
+        XDrawString(
+        display,
+        window,
+        gc,
+        100, 100,
+        "Uruchomiono gre!",
+        17
+    );
+
+        XFlush(display);
+        }
+    }
+
+    while (false){
+
+    }
     if (event.type == ClientMessage){
     
         break;
