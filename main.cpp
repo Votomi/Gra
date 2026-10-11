@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cstring>
 #include "menu/Menu.h"
-#include "gra/gra.h"
+#include "moja_gra/gra.h"
 
 int main()
 {
@@ -73,22 +73,10 @@ if (event.type == ButtonPress) {
 
         XClearWindow(display, window);
 
-        XSetForeground(display, gc, 0xFFFFFF);
-        XDrawString(
-        display,
-        window,
-        gc,
-        100, 100,
-        "Uruchomiono gre!",
-        17
-    );
+    rysujkwadrat(display, window);
 
         XFlush(display);
         }
-    }
-
-    while (false){
-
     }
     if (event.type == ClientMessage){
     
